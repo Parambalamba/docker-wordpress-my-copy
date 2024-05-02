@@ -6,10 +6,12 @@ services:
     volumes:
       - "db-data:/var/lib/mysql"
     environment:
-      MYSQL_ROOT_PASSWORD: wordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: touchh_app
+      MYSQL_DATABASE: touchh_db
+      MYSQL_USER: touchh_user
+      MYSQL_PASSWORD: touchh_user_password
+    networks:
+      - touchh-network
 
   wordpress:
     depends_on:
@@ -21,23 +23,21 @@ services:
       - "8123:80"
     environment:
       DB_HOST: db
-      DB_PASSWORD: wordpress
-      DB_NAME: wordpress
-      DB_USER: wordpress
+      DB_PASSWORD: touchh_app
+      DB_NAME: touchh_db
+      DB_USER: touchh_user
       WORDPRESS_SITE_URL: http://localhost:8123
       FS_METHOD: direct
       # For debugging only:
-      #WP_DEBUG: "true"
-      #WP_DEBUG_DISPLAY: "true"
+      WP_DEBUG: "true"
+      WP_DEBUG_DISPLAY: "true"
+    networks:
+      - touchh-network
 
 volumes:
   db-data:
   site-data:
 
 networks:
-  default:
+  touchh-network:
     driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.91.0/24
